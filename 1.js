@@ -45,16 +45,16 @@ function run (directions) {
     direction = currentDirection(direction + parsed[i].turn);
     if (direction === 0) {
       vertDisplaced += parsed[i].blocks;
-    } else if (direction === 1) {
+    } else if (direction === 1 || direction === -3) {
       horDisplaced += parsed[i].blocks;
-    } else if (direction === 2) {
+    } else if (direction === 2 || direction === -2) {
       vertDisplaced -= parsed[i].blocks;
-    } else if (direction === 3) {
+    } else if (direction === 3 || direction === -1) {
       horDisplaced -= parsed[i].blocks;
     }
   }
 
-  return vertDisplaced + horDisplaced;
+  return Math.abs(vertDisplaced) + Math.abs(horDisplaced);
 }
 
 function parseDirections (path) {
