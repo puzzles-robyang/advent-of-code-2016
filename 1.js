@@ -19,53 +19,55 @@ R5, L5, R5, R3 leaves you 12 blocks away.
 How many blocks away is Easter Bunny HQ?
 */
 
-var directions = ['R2', 'L1', 'R2', 'R1', 'R1', 'L3', 'R3', 'L5', 'L5', 'L2', 'L1', 'R4', 'R1', 'R3', 'L5', 'L5', 'R3', 'L4', 'L4', 'R5', 'R4', 'R3', 'L1', 'L2', 'R5', 'R4', 'L2', 'R1', 'R4', 'R4', 'L2', 'L1', 'L1', 'R190', 'R3', 'L4', 'R52', 'R5', 'R3', 'L5', 'R3', 'R2', 'R1', 'L5', 'L5', 'L4', 'R2', 'L3', 'R3', 'L1', 'L3', 'R5', 'L3', 'L4', 'R3', 'R77', 'R3', 'L2', 'R189', 'R4', 'R2', 'L2', 'R2', 'L1', 'R5', 'R4', 'R4', 'R2', 'L2', 'L2', 'L5', 'L1', 'R1', 'R2', 'L3', 'L4', 'L5', 'R1', 'L1', 'L2', 'L2', 'R2', 'L3', 'R3', 'L4', 'L1', 'L5', 'L4', 'L4', 'R3', 'R5', 'L2', 'R4', 'R5', 'R3', 'L2', 'L2', 'L4', 'L2', 'R2', 'L5', 'L4', 'R3', 'R1', 'L2', 'R2', 'R4', 'L1', 'L4', 'L4', 'L2', 'R2', 'L4', 'L1', 'L1', 'R4', 'L1', 'L3', 'L2', 'L2', 'L5', 'R5', 'R2', 'R5', 'L1', 'L5', 'R2', 'R4', 'R4', 'L2', 'R5', 'L5', 'R5', 'R5', 'L4', 'R2', 'R1', 'R1', 'R3', 'L3', 'L3', 'L4', 'L3', 'L2', 'L2', 'L2', 'R2', 'L1', 'L3', 'R2', 'R5', 'R5', 'L4', 'R3', 'L3', 'L4', 'R2', 'L5', 'R5'];
+var directions = 'R2, L1, R2, R1, R1, L3, R3, L5, L5, L2, L1, R4, R1, R3, L5, L5, R3, L4, L4, R5, R4, R3, L1, L2, R5, R4, L2, R1, R4, R4, L2, L1, L1, R190, R3, L4, R52, R5, R3, L5, R3, R2, R1, L5, L5, L4, R2, L3, R3, L1, L3, R5, L3, L4, R3, R77, R3, L2, R189, R4, R2, L2, R2, L1, R5, R4, R4, R2, L2, L2, L5, L1, R1, R2, L3, L4, L5, R1, L1, L2, L2, R2, L3, R3, L4, L1, L5, L4, L4, R3, R5, L2, R4, R5, R3, L2, L2, L4, L2, R2, L5, L4, R3, R1, L2, R2, R4, L1, L4, L4, L2, R2, L4, L1, L1, R4, L1, L3, L2, L2, L5, R5, R2, R5, L1, L5, R2, R4, R4, L2, R5, L5, R5, R5, L4, R2, R1, R1, R3, L3, L3, L4, L3, L2, L2, L2, R2, L1, L3, R2, R5, R5, L4, R3, L3, L4, R2, L5, R5';
 
-var test1 = ['R2', 'L3']; // 2 blocks East and 3 blocks North, or 5 blocks away.
-var test2 = ['R2', 'R2', 'R2']; // 2 blocks due South of your starting position, which is 2 blocks away.
-var test3 = ['R5', 'L5', 'R5', 'R3']; // 12 blocks away.
+var test1 = 'R2, L3'; // 2 blocks East and 3 blocks North, or 5 blocks away.
+var test2 = 'R2, R2, R2'; // 2 blocks due South of your starting position, which is 2 blocks away.
+var test3 = 'R5, L5, R5, R3'; // 12 blocks away.
+var test4 = 'R1, L1, L1, L1, L1, L1, L1, L1, R1, R1, R1, R1, R1';
 
 console.log("Passes test 1", run(test1) === 5);
 console.log("Passes test 2", run(test2) === 2);
 console.log("Passes test 3", run(test3) === 12);
 console.log("Main test result:", run(directions));
 
+console.log("Test 1", run(test1));
+console.log("Test 2", run(test2));
+console.log("Test 3", run(test3));
+console.log("Test 4", run(test4));
+
 function run (directions) {
-  var parsed = directions.map(parseDirections);
+  var parsed = directions.split(', ').map(parseDirections);
+  var direction = 0;
+  var vertDisplaced = 0;
+  var horDisplaced = 0;
+  for (var i = 0; i < parsed.length; i++) {
+    direction = currentDirection(direction + parsed[i].turn);
+    if (direction === 0) {
+      vertDisplaced += parsed[i].blocks;
+    } else if (direction === 1) {
+      horDisplaced += parsed[i].blocks;
+    } else if (direction === 2) {
+      vertDisplaced -= parsed[i].blocks;
+    } else if (direction === 3) {
+      horDisplaced -= parsed[i].blocks;
+    }
+  }
 
-}
-
-function parseTurn (input) {
-  return input.match(/([LR])[0-9]+/)[1] === 'L') ? -1: 1;
-}
-
-function parseBlocks (input) {
-  return Number(input.match(/([0-9]+)/)[1]);
+  return vertDisplaced + horDisplaced;
 }
 
 function parseDirections (path) {
   return {
-    'turn': input.match(/([LR])[0-9]+/)[1] === 'L') ? -1: 1,
-    'blocks': Number(input.match(/([0-9]+)/)[1])
+    'turn': path.match(/[LR]/)[0] === 'L' ? -1: 1,
+    'blocks': Number(path.match(/([0-9]+)/)[1])
   };
 }
 
-function walk (currentStep, traveled) {
-
+function currentDirection (point) {
+  return point === 4 || point === -4 ? 0 : point;
 }
 
-function direction (point) {
 
-}
 
-function distance (steps) {
 
-}
-
-function left (steps) {
-
-}
-
-function right (steps) {
-
-}
